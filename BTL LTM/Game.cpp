@@ -32,7 +32,6 @@ Game::Game()
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(serverPort);
 	//ioctlsocket(server, FIONBIO, &ul);
-	cout << "server:" << server << endl;
 	//font and color
 	this->font.loadFromFile("ceiwin/arial.ttf");
 	this->font2.loadFromFile("ceiwin/font2.otf");
@@ -87,7 +86,7 @@ void Game::GD1()
 	char nameInput[30];
 	bool notEnterName = true;
 	bool cannotConnect = true;
-	while (notEnterName != false || cannotConnect != false) {
+	while ((notEnterName != false || cannotConnect != false) && window->isOpen()) {
 		Event e;
 		Vector2f m = { (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y };
 		while (window->pollEvent(e)) {
@@ -108,27 +107,22 @@ void Game::GD1()
 			if (okButton.isPress()) {
 				strcpy(nameInput, inputName.getString());
 				if (strlen(nameInput) < 4) {
-					cout << "ten phai dai hon 4 ky tu";
 					error.setString(L"Tên phải dài hơn 4 ký tự");
 				}
 				else {
 					notEnterName = false;
-					cout << "dang ket noi va gui ten len server\n";
 					okButton.setStringUnicode(L"Connecting....");
 				}
 			}
 		}
 		else {
 			int ret = connect(server, (SOCKADDR*)&this->serverAddr, sizeof(serverAddr));
-			cout << server << endl;
-			cout << ret << endl;
 			if (ret != SOCKET_ERROR) {
 				ioctlsocket(server, FIONBIO, &ul);
 				char mess[50];
 				sprintf(mess, "NAME %s .", nameInput);
 				send(server, mess, strlen(mess), 0);
-				cout << "da ket noi ts server" << endl;
-				cout << "gui ten len server:" << nameInput << endl;
+				cout << "Da ket noi ts server" << endl;
 				cannotConnect = false;
 			}
 		}
@@ -147,6 +141,7 @@ void Game::GD1()
 
 void Game::GD2()
 {
+	if (!window->isOpen()) return;
 	// init
 	Vector2f pPN, pCR, pFR, sPN, sCR, sFR, pIP, sIP;
 	pIP = { 554,500 };
@@ -198,7 +193,7 @@ void Game::GD2()
 	bool notGetRoomId = true;
 	char roomId[20];
 	int room;
-	while (notGetRoomId) {
+	while (notGetRoomId && window->isOpen()) {
 		Event e;
 		Vector2f m = { (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y };
 		while (window->pollEvent(e)) {
@@ -234,7 +229,6 @@ void Game::GD2()
 			if (strlen(roomId) > 0) {
 				int id = atoi(roomId);
 				sprintf(mess, "TIMPHONG %d .", id);
-				cout << "tim phong " << id << endl;
 				send(server, mess, strlen(mess), 0);
 			}
 			else {
@@ -244,12 +238,12 @@ void Game::GD2()
 		// nhan du lieu tu server
 		int ret = recv(server, mess, sizeof(mess), 0);
 		if (ret > 0) {
-			cout << "nhan tu server:" << mess << endl;
+			cout << "server: " << mess << endl;
 			room = getRoomId(mess);
 			if (room >= 0) {
 				notGetRoomId = false;
 				this->roomId = room;
-				cout << "get roomId :" << room << endl;
+				cout << "vao phong :" << room << endl;
 				return;
 			}
 			else if (room == -1)
@@ -309,13 +303,14 @@ bool Game::GD3()
 	char mess[100];
 	char protocol[30];
 	char nameOP[30];
-	while (true) {
+	while (true && window->isOpen()) {
 		Event e;
 		Vector2f m = { (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y };
 		while (window->pollEvent(e)) {
 			switch (e.type) {
 			case Event::Closed:
 				window->close();
+				return false;
 				break;
 			case Event::MouseButtonPressed:
 				Exit.setPress(m);
@@ -340,8 +335,7 @@ bool Game::GD3()
 					turn = true;
 				else if (strcmp(protocol, "CLIENT") == 0)
 					turn = false;
-				cout << turn << endl;
-				cout << "da ket noi voi nguoi choi:" << nameOP;
+				cout << "da ket noi voi nguoi choi:" << nameOP << endl;
 				this->oppenent = new PlayerOnline(nameOP, server);
 				return true;
 			}
@@ -434,7 +428,7 @@ int Game::gameStart()
 	Clock clock;
 	bool playing = true;
 	Player *player;
-	while (playing) {
+	while (playing && window->isOpen()) {
 		Event e;
 		timeElapse = clock.restart().asSeconds();
 		Vector2f m = { (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y };
@@ -454,7 +448,6 @@ int Game::gameStart()
 		}
 		bOut.update(m);
 		if (bOut.isPress()) {
-			cout << "gui : GAME GOTO 404 0 ." << endl;
 			send(server, "GAME GOTO 404 0 .", 18, 0);
 			return -1;
 		}
@@ -478,7 +471,7 @@ int Game::gameStart()
 					if (ret > 0) {
 						buff[ret] = 0;
 						if (strstr(buff, "GAME OK") != NULL) {
-							cout << " bo luot thanh cong\n";
+							cout << "da bi mat luot \n";
 							sended = false;
 							time = this->turnTime;
 							you->lostTurn();
@@ -493,6 +486,7 @@ int Game::gameStart()
 			else {
 				move = you->move();
 				if (move.x >= 0) {
+					cout << "ban da di nuoc : " << move.x << " " << move.y << endl;
 					caro->update(move);
 					if (caro->checkEndGame())
 						break;
@@ -506,17 +500,18 @@ int Game::gameStart()
 		else {
 			move = oppenent->move();
 			if (move.x == -2) {
-				cout << "doi thu bo luot\n";
+				cout << "doi thu mat luot\n";
 				turn = !turn;
 				caro->changeTurn();
 				time = this->turnTime;
 				send(server, "GAME OK .", 10, 0);
 			}
 			else if (move.x == -3) {
-				cout << "doi thu da thoat";
+				cout << "doi thu da thoat\n";
 				return 0;
 			}
 			else if (move.x >= 0) {
+				cout << "doi thu da di nuoc : " << move.x << " " << move.y << endl;
 				caro->update(move);
 				if (caro->checkEndGame())
 					break;
@@ -551,6 +546,7 @@ int Game::gameStart()
 	result.setStyle(Text::Bold);
 	if (turn) {
 		result.setString("YOU WIN");
+		send(server, "GAME WIN .", 11, 0);
 		result.setFillColor(Color::Green);
 	}
 	else {
@@ -593,20 +589,20 @@ int Game::gameStart()
 		exit.update(m);
 		//xy ly
 		if (replay.isPress()) { 
-			send(server, "GAME REPLAY .", 14, 0);
+			send(server, "REPLAY OK .", 12, 0);
 			return 1;
 		}
 		if (exit.isPress()) { 
-			send(server, "GAME OUT .", 11, 0);
+			send(server, "REPLAY NO .", 12, 0);
 			return -1;
 		}
 		int ret = recv(server, buff, sizeof(buff), 0);
 		if (ret > 0) {
 			buff[ret] = 0;
-			if (strstr(buff, "GAME") != NULL) {
-				if (strstr(buff, "GAME REPLAY") != NULL)
+			if (strstr(buff, "REPLAY") != NULL) {
+				if (strstr(buff, "REPLAY OK") != NULL)
 					cout << "doi thu cung muon choi lai\n";
-				if (strstr(buff, "GAME OUT") != NULL)
+				if (strstr(buff, "REPLAY NO") != NULL)
 					return 0;
 			}
 		}
@@ -631,7 +627,7 @@ void Game::gameInit()
 		this->GD2();
 		int status;
 		bool inRoom = true;
-		while (inRoom) {
+		while (inRoom && window->isOpen()) {
 			bool canStartGame = this->GD3();
 			if (canStartGame) {
 				this->caro = new Caro(window, { 20,20 });
@@ -641,16 +637,11 @@ void Game::gameInit()
 				status = this->gameStart();
 				if (status == -1) {
 					inRoom = false;
-					delete this->oppenent;
 				}
-				else if (status == 0) {
-					delete this->oppenent;
+				else {
 					inRoom = true;
 				}
-				else if (status == 1) {
-					inRoom = true;
-					delete this->oppenent;
-				}
+				delete this->oppenent;
 				delete this->caro;
 			}
 			else {
@@ -659,6 +650,7 @@ void Game::gameInit()
 			}
 		}
 	}
+	delete this->you;
 }
 
 void Game::test()

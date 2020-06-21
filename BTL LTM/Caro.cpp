@@ -85,7 +85,6 @@ void Caro::update(Vector2i move)
 	board[move.x][move.y] = xo;
 	boardDisplay[move.x][move.y] = xo;
 	lastMove = move;
-	if (checkEndGame()) cout << "WIN" << endl;
 }
 
 void Caro::mark(Vector2f mousePosition)
@@ -135,9 +134,6 @@ bool Caro::checkEndGame()
 		//check doc
 		startxy = getIndexCheck(lastMove, { -1,0 });
 		endxy = getIndexCheck(lastMove, { 1,0 });
-		cout << "las c:" << lastChoose.x << "," << lastChoose.y << endl;
-		cout << "start :" << startxy.x << ";" << startxy.y << endl;
-		cout << "end:" << endxy.x << ";" << endxy.y << endl;
 		count = 0; 
 		for (int k = startxy.x; k <= endxy.x; k++) {
 			if (board[k][col] == xo) {

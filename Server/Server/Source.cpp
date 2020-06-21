@@ -1,5 +1,7 @@
 #include<iostream>
 #include<winsock.h>
+//#include<thread>
+#include"console.h"
 using namespace std;
 #pragma comment(lib,"ws2_32")
 #pragma warning(disable:4996)
@@ -25,10 +27,17 @@ char mess[100];
 int numroom = 0;
 int numclient = 0;
 int roomIdIncree = 100;
-
+void Nocursortype()
+{
+	CONSOLE_CURSOR_INFO Info;
+	Info.bVisible = FALSE;
+	Info.dwSize = 20;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+}
 void handle(int clientId, char* buf);
 void xoaphong(int roomId);
 void xoaclient(int clientId);
+void matketnoi(int clientId);
 int timphong(int roomId);//if roomId=-1 la tim phong hop le, roomId>=0 la tim phong co Id=roomId
 int taophong(int clientId);
 void roiphong(int clientId);
@@ -39,8 +48,15 @@ void protoTimPhong(int clientId, char* buf);
 void protoChoiLuon(int clientId, char* buf);
 void protoGame(int clientId, char* buf);
 void protoRoiPhong(int clinetId, char* buf);
+void protoReplay(int clientId, char *buf);
+DWORD WINAPI display(LPVOID p);
+//________________MAIN________________
+
 int main()
 {
+	//thread gui(display);
+	CreateThread(NULL, 0, display, NULL, 0, NULL);
+	//
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 2), &wsa);
 
@@ -83,18 +99,21 @@ int main()
 				if (ret <= 0)
 				{
 					// Xoa socket khoi mang clients
-					xoaclient(i);
+					matketnoi(i);
 				}
 				else {
 					buf[ret] = 0;
 					//
-					cout << clients[i].name<<"("<<clients[i].state<<")" << " gui:" << buf << endl;
+					//cout << clients[i].name << "(" << clients[i].state << ")" << " gui:" << buf << endl;
 					//-v 127.0.0.1 9000
 					handle(i, buf);
 				}
 			}
 	}
 }
+
+
+
 void handle(int clientId, char* buf)
 {
 	char protocol[10];
@@ -105,6 +124,7 @@ void handle(int clientId, char* buf)
 			sscanf(buf, "%s", protocol);
 			strcpy(clients[clientId].name, protocol);
 			clients[clientId].state = 1;
+			clients[clientId].roomid = 0;
 		}
 	}
 	else if (strcmp(protocol, "CHOILUON") == 0) {
@@ -122,6 +142,9 @@ void handle(int clientId, char* buf)
 	}
 	else if (strcmp(protocol, "ROIPHONG") == 0) {
 		protoRoiPhong(clientId, buf);
+	}
+	else if (strcmp(protocol, "REPLAY") == 0) {
+		protoReplay(clientId, buf);
 	}
 }
 
@@ -141,17 +164,68 @@ void xoaclient(int clientId)
 	for (int i = 0; i < numroom; i++) {
 		if (clients[clientId].roomid == rooms[i].roomid) {
 			if (rooms[i].player[0]->socket == clients[clientId].socket) {
-				rooms[i].player[0] = rooms[i].player[1];
-				rooms[i].player[0]->state = 2;
+				roiphong(clientId);
 			}
-			rooms[i].numclientofroom--;
 			break;
 		}
 	}
 	strcpy(clients[clientId].name, clients[numclient - 1].name);
 	clients[clientId].socket = clients[numclient - 1].socket;
 	clients[clientId].roomid = clients[numclient - 1].roomid;
+	clients[numclient - 1].state = 0;
+	clients[numclient - 1].name[0] = 0;
+	if (clients[clientId].roomid != 0) {
+		int id;
+		for (id = 0; id < numroom; id++)
+			if (rooms[id].roomid == clients[clientId].roomid)
+				break;
+		if (rooms[id].player[0]->socket == clients[clientId].socket)
+			rooms[id].player[0] = &clients[clientId];
+		else
+			rooms[id].player[1] = &clients[clientId];
+	}
 	numclient--;
+}
+
+void matketnoi(int clientId)
+{
+	cout << clients[clientId].name << " da bi mat ket noi" << endl;
+	int state = clients[clientId].state;
+	switch (state) {
+	case 0:
+	case 1:
+		break;
+	case 2:
+		roiphong(clientId);
+		break;
+	case 3:
+	{
+		int id;
+		for (id = 0; id < numroom; id++)
+			if (clients[clientId].roomid == rooms[id].roomid)
+				break;
+		if (rooms[id].player[0]->socket == clients[clientId].socket)
+			send(rooms[id].player[1]->socket, "GAME GOTO 404 0 .", 18, 0);
+		else
+			send(rooms[id].player[0]->socket, "GAME GOTO 404 0 .", 18, 0);
+		roiphong(clientId);
+		break;
+	}
+	case 4:
+	{
+		int id;
+		for (id = 0; id < numroom; id++)
+			if (clients[clientId].roomid == rooms[id].roomid)
+				break;
+		if (rooms[id].player[0]->socket == clients[clientId].socket)
+			send(rooms[id].player[1]->socket, "REPLAY NO .", 12, 0);
+		else
+			send(rooms[id].player[0]->socket, "REPLAY NO .", 12, 0);
+		roiphong(clientId);
+		break;
+	}
+	}
+	xoaclient(clientId);
 }
 
 int timphong(int roomId)
@@ -193,6 +267,7 @@ void roiphong(int clientId)
 {
 	//
 	int roomId = clients[clientId].roomid;
+
 	clients[clientId].state = 1;
 	clients[clientId].roomid = 0;
 	//
@@ -232,9 +307,6 @@ void startgame(int roomId)
 {
 	Sleep(500);
 	int id = roomId;
-	cout << "gui cho nguoi sau:" << mess << endl;
-	cout << "sock ket host:" << rooms[id].player[0]->socket << endl;
-	cout << "sock ket client:" << rooms[id].player[1]->socket << endl;
 
 	sprintf(mess, "GAMESTART HOST %s .", rooms[id].player[1]->name);
 	send(rooms[id].player[0]->socket, mess, strlen(mess), 0);
@@ -242,12 +314,12 @@ void startgame(int roomId)
 	sprintf(mess, "GAMESTART CLIENT %s .", rooms[id].player[0]->name);
 	send(rooms[id].player[1]->socket, mess, strlen(mess), 0);
 
-	//
-	cout << "da gui gamestart cho 2 player\n";
 
 	//danh dau nguoi choi dang choi
 	rooms[id].player[0]->state = 3;
 	rooms[id].player[1]->state = 3;
+	rooms[id].p1Replay = false;
+	rooms[id].p2Replay = false;
 }
 
 void protoTaoPhong(int clientId, char* buf)
@@ -276,8 +348,8 @@ void protoTimPhong(int clientId, char* buf)
 		else {
 			sprintf(mess, "MAPHONG OK %d .", roomId);
 			send(clients[clientId].socket, mess, strlen(mess), 0);
-			vaophong(clientId, roomId);
 			clients[clientId].state = 2;
+			vaophong(clientId, roomId);
 			return;
 		}
 		send(clients[clientId].socket, mess, strlen(mess), 0);
@@ -316,13 +388,15 @@ void protoGame(int clientId, char* buf)
 			if (strcmp(value, "GOTO") == 0) {
 				if (x == 404) {
 					roiphong(clientId);
-					cout << clients[clientId].name << " dang choi thi thoat\n";
 				}
 				sprintf(mess, "GAME GOTO %d %d .", x, y);
 			}
 			else if (strcmp(value, "OK") == 0) {
-				cout << "game okkkkkk\n";
 				strcpy(mess, "GAME OK .");
+			}
+			else if (strcmp(value, "WIN") == 0) {
+				rooms[id].player[0]->state = 4;
+				rooms[id].player[1]->state = 4;
 			}
 			else if (strcmp(value, "REPLAY") == 0) {
 				strcpy(mess, "GAME REPLAY .");
@@ -350,11 +424,9 @@ void protoGame(int clientId, char* buf)
 			SOCKET recver;
 			if (rooms[id].player[0]->socket == clients[clientId].socket) {
 				recver = rooms[id].player[1]->socket;
-				cout << "gui lai cho " << rooms[id].player[1]->name << " :" << buf << endl;
 			}
 			else {
 				recver = rooms[id].player[0]->socket;
-				cout << "gui lai cho " << rooms[id].player[0]->name << " :" << buf << endl;
 			}
 
 			send(recver, mess, strlen(mess), 0);
@@ -366,6 +438,90 @@ void protoRoiPhong(int clientId, char* buf)
 {
 	if (clients[clientId].state == 2) {
 		roiphong(clientId);
-		cout << clients[clientId].name << "da roi phong " << endl;
+		//cout << clients[clientId].name << "da roi phong " << endl;
+	}
+}
+
+void protoReplay(int clientId, char * buf)
+{
+	if (clients[clientId].state == 4) {
+		char value[20];
+		int  id;
+		for (id = 0; id < numroom; id++)
+			if (rooms[id].roomid == clients[clientId].roomid)
+				break;
+		sscanf(buf, "%s", value);
+		if (strcmp(value, "OK") == 0) {
+			strcpy(mess, "REPLAY OK .");
+			if (rooms[id].player[0]->socket == clients[clientId].socket)
+				rooms[id].p1Replay = true;
+			else
+				rooms[id].p2Replay = true;
+
+			if (rooms[id].player[0]->socket == clients[clientId].socket)
+				send(rooms[id].player[1]->socket, mess, strlen(mess), 0);
+			else
+				send(rooms[id].player[0]->socket, mess, strlen(mess), 0);
+
+			if (rooms[id].p1Replay == true && rooms[id].p2Replay == true) {
+				startgame(id);
+			}
+		}
+		else if (strcmp(value, "NO") == 0) {
+			strcpy(mess, "REPLAY NO .");
+			roiphong(clientId);
+			send(rooms[id].player[0]->socket, mess, strlen(mess), 0);
+		}
+	}
+}
+
+DWORD WINAPI display(LPVOID p)
+{
+	Nocursortype();
+	//clscr
+	while (1) {
+		Sleep(2000);
+		gotoXY(0, 2);
+		TextColor(ColorCode_Red);
+		for (int i = 2; i < 25; i++)
+			cout << "                                                  |                                                 \n";
+
+		gotoXY(20, 0);
+		TextColor(ColorCode_Blue);
+		cout << "Num of Clients:" << numclient;
+		gotoXY(70, 0);
+		TextColor(ColorCode_Green);
+		cout << "Num of Room:" << numroom;
+		gotoXY(0, 1);
+		TextColor(ColorCode_Blue);
+		cout << "Name        RoomId      State       Socket";
+		gotoXY(51, 1);
+		TextColor(ColorCode_Green);
+		cout << "RoomId      NumPlayer   Player1     Player2";
+		TextColor(ColorCode_Yellow);
+		for (int i = 0; i < numclient; i++) {
+			gotoXY(0, i + 2);
+			cout << clients[i].name << '\t';
+			gotoXY(12, i + 2);
+			cout << clients[i].roomid << '\t';
+			gotoXY(24, i + 2);
+			cout << clients[i].state << '\t';
+			gotoXY(36, i + 2);
+			cout << clients[i].socket << '\t';
+		}
+		for (int i = 0; i < numroom; i++) {
+			gotoXY(51, i + 2);
+			cout << rooms[i].roomid << '\t';
+			gotoXY(63, i + 2);
+			cout << rooms[i].numclientofroom << '\t';
+			if (rooms[i].numclientofroom >= 1) {
+				gotoXY(75, i + 2);
+				cout << rooms[i].player[0]->name << '\t';
+			}
+			if (rooms[i].numclientofroom == 2) {
+				gotoXY(87, i + 2);
+				cout << rooms[i].player[1]->name << '\t';
+			}
+		}
 	}
 }

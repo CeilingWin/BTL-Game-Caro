@@ -22,6 +22,7 @@ Vector2i PlayerOffline::move()
 		int ret = recv(server, mess, sizeof(mess), 0);
 		if (ret > 0) {
 			mess[ret] = 0;
+			cout << "server:" << mess << endl;
 			sscanf(mess, "%s %s ", protocol, values);
 			if (strcmp(protocol, "GAME") == 0 && strcmp(values, "OK") == 0) {
 				if (lastMove.x != -1) {
