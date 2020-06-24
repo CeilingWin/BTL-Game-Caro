@@ -12,15 +12,16 @@ Caro.cpp(102): warning C4244: '=': conversion from 'float' to 'int', possible lo
 Caro.cpp(108): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 Caro.cpp(109): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Game.cpp
-Game.cpp(65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-Game.cpp(66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-Game.cpp(125): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Game.cpp(222): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Game.cpp(226): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Game.cpp(68): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Game.cpp(69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Game.cpp(128): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Game.cpp(229): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 Game.cpp(233): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Game.cpp(428): warning C4101: 'values': unreferenced local variable
-Game.cpp(428): warning C4101: 'protocol': unreferenced local variable
-Game.cpp(431): warning C4101: 'player': unreferenced local variable
+Game.cpp(240): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Game.cpp(332): warning C4305: 'argument': truncation from 'double' to 'float'
+Game.cpp(471): warning C4101: 'values': unreferenced local variable
+Game.cpp(471): warning C4101: 'protocol': unreferenced local variable
+Game.cpp(474): warning C4101: 'player': unreferenced local variable
   Player.cpp
   PlayerOffline.cpp
 PlayerOffline.cpp(15): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data

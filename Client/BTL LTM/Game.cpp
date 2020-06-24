@@ -41,12 +41,15 @@ Game::Game()
 	//init board
 	this->turnTime = 20;
 	//init background
-	this->bgTexture.loadFromFile("ceiwin/bg.jpg");
-	this->background.setTexture(bgTexture);
+	/*this->bgTexture.loadFromFile("ceiwin/bg.jpg");
+	this->background.setTexture(bgTexture);*/
 }
 
 void Game::GD1()
 {
+	//background
+	this->bgTexture.loadFromFile("ceiwin/bg13.jpg");
+	this->background.setTexture(bgTexture);
 	//
 	int x;
 	Vector2f ipnamePosition, okPosition, ipnameSize, okSize;
@@ -60,8 +63,8 @@ void Game::GD1()
 	intro.setString(L"GAME CARO");
 	intro.setCharacterSize(100);
 	intro.setFont(font2);
-	//intro.setFillColor(Color(54, 54, 54));
-	intro.setFillColor(Color::White);
+	intro.setFillColor(Color(54, 54, 54));
+	//intro.setFillColor(Color::White);
 	x = (1100 - intro.getGlobalBounds().width) / 2;
 	intro.setPosition(x, 100);
 	error.setCharacterSize(20);
@@ -142,6 +145,9 @@ void Game::GD1()
 
 void Game::GD2()
 {
+	//background
+	this->bgTexture.loadFromFile("ceiwin/bg17.jpg");
+	this->background.setTexture(bgTexture);
 	if (!window->isOpen()) return;
 	// init
 	Vector2f pPN, pCR, pFR, sPN, sCR, sFR, pIP, sIP;
@@ -159,7 +165,8 @@ void Game::GD2()
 	Text intro, error;
 	intro.setFont(font2);
 	intro.setCharacterSize(100);
-	intro.setFillColor(Color(54, 54, 54));
+	//intro.setFillColor(Color(54, 54, 54));
+	intro.setFillColor(Color::White);
 	intro.setString(L"Chọn chế độ");
 	intro.setLetterSpacing(2);
 	intro.setPosition(350, 50);
@@ -268,6 +275,9 @@ void Game::GD2()
 
 bool Game::GD3()
 {
+	//background
+	this->bgTexture.loadFromFile("ceiwin/bg11.jpg");
+	this->background.setTexture(bgTexture);
 	if (window->isOpen() == false) return false;
 	//Waitting
 	Sprite wait;
@@ -319,7 +329,7 @@ bool Game::GD3()
 			}
 		}
 		Exit.update(m);
-		wait.rotate(0.5);
+		wait.rotate(0.99);
 		//waiting server 
 		if (Exit.isPress()) {
 			send(server, "ROIPHONG .", 11, 0);
@@ -357,24 +367,29 @@ bool Game::GD3()
 
 int Game::gameStart()
 {
-	//test
+	//background
+	this->bgTexture.loadFromFile("ceiwin/bg.jpg");
+	this->background.setTexture(bgTexture);
+	////test
 	/*caro = new Caro(window, { 20,20 });
 	you = new PlayerOffline("thang", server);
 	you->setBoard(caro->getBoard());
 	you->setWindow(window);
-	oppenent = new PlayerOnline("ngoc", server);*/
+	oppenent = new PlayerOnline("ngoc", server);
+	yourPoint = 2;
+	oppenentPoint = 1;*/
 	//init 
 	if (window->isOpen() == false) return -1;
 	//
 	Vector2f pY, pO, pTY, pTO, pTime, pTimeOut, pOut;
 	Vector2f sY, sO, sTY, sTO, sTime, sTimeOut, sOut;
-	pY = { 820,40 };
+	pY = { 805,40 };
 	sY = { 125,60 };
-	pO = { 135, 0 }; pO += pY;
+	pO = { 165, 0 }; pO += pY;
 	sO = sY;
-	pTY = { 50,sY.y + 10 }; pTY += pY;
-	pTO = { 130,0 }; pTO += pTY;
-	pTimeOut = { -50,50 }; pTimeOut += pTY;
+	pTY = { 30,sY.y + 10 }; pTY += pY;
+	pTO = { 160,0 }; pTO += pTY;
+	pTimeOut = { -20,50 }; pTimeOut += pTY;
 	sTimeOut = { 260,40 };
 	pOut = { 820,560 };
 	sOut = { 260,50 };
@@ -383,14 +398,23 @@ int Game::gameStart()
 	bOut.setText(&font, Color::White);
 	bOut.setStringUnicode(L"OUT GAME");
 	//label 2 player 
-	Button bP1(pY, sY, Color(30, 234, 85), cHover, cActive);
-	Button bP2(pO, sO, Color(248, 14, 14), cHover, cActive);
+	Button bP1(pY, sY, Color(30, 234, 85,200), cHover, cActive);
+	Button bP2(pO, sO, Color(248, 14, 14,200), cHover, cActive);
 	bP1.setText(&font, Color::Black);
 	bP1.setString(you->getName());
 	bP1.reSizeText(30);
 	bP2.setText(&font, Color::Black);
 	bP2.setString(oppenent->getName());
 	bP2.reSizeText(30);
+	//text
+	Text vs;
+	vs.setCharacterSize(25);
+	vs.setFillColor(Color(0,255,255));
+	vs.setFont(font);
+	vs.setStyle(Text::Bold);
+	vs.setPosition(931, 55);
+	vs.setString("VS");
+
 	// XO
 	Sprite x, o;
 	Texture tx, to;
@@ -406,13 +430,32 @@ int Game::gameStart()
 		x.setPosition(pTO);
 		o.setPosition(pTY);
 	}
+	//point 
+	Vector2f dir;
+	dir = { 35,0 };
+	pTY += dir;
+	sY = { 30,30 };
+	Button yp(pTY, sY, Color::White, Color::White, Color::White);
+	pTO += dir;
+	Button op(pTO, sY, Color::White, Color::White, Color::White);
+	char point[5];
+	yp.setText(&font, Color::Blue);
+	sprintf(point, "%d", yourPoint);
+	yp.setString(point);
+	yp.setBold();
+
+	op.setText(&font, Color::Red);
+	sprintf(point, "%d", oppenentPoint);
+	op.setString(point);
+	op.setBold();
+	
 	// time out
 	RectangleShape recOut, recIn;
 	recOut.setPosition(pTimeOut);
 	recOut.setSize(sTimeOut);
 	recOut.setFillColor(Color(0,0,0,0));
 	recOut.setOutlineThickness(5);
-	recOut.setOutlineColor(Color::Cyan);
+	recOut.setOutlineColor(Color(0,191,255));
 
 	recIn.setPosition(pTimeOut.x + 5, pTimeOut.y + 5);
 	recIn.setSize({ sTimeOut.x - 10, sTimeOut.y - 10 });
@@ -524,18 +567,19 @@ int Game::gameStart()
 		window->clear();
 		window->draw(background);
 		bOut.update(m);
-		bP1.update(m);
-		bP2.update(m);
+
 		bOut.draw(*window);
 		bP1.draw(*window);
 		bP2.draw(*window);
 		bOut.draw(*window);
+		yp.draw(*window);
+		op.draw(*window);
 		caro->draw();
 		window->draw(x);
 		window->draw(o);
 		window->draw(recOut);
 		window->draw(recIn);
-
+		window->draw(vs);
 		window->display();
 	}
 
@@ -546,11 +590,13 @@ int Game::gameStart()
 	result.setFont(font2);
 	result.setStyle(Text::Bold);
 	if (turn) {
+		yourPoint++;
 		result.setString("YOU WIN");
 		send(server, "GAME WIN .", 11, 0);
 		result.setFillColor(Color::Green);
 	}
 	else {
+		oppenentPoint++;
 		result.setString("YOU LOSE");
 		result.setFillColor(Color::Red);
 	}
@@ -627,6 +673,8 @@ void Game::gameInit()
 	while (window->isOpen()) {
 		this->GD2();
 		int status;
+		yourPoint = 0;
+		oppenentPoint = 0;
 		bool inRoom = true;
 		while (inRoom && window->isOpen()) {
 			bool canStartGame = this->GD3();
@@ -664,6 +712,9 @@ void Game::test()
 	/*this->GD1();
 	this->GD2();
 	this->GD3();*/
+	//this->GD1();
+	this->GD3();
+	this->GD2();
 	while (window->isOpen()) {
 		Event e;
 		while (window->pollEvent(e)) {

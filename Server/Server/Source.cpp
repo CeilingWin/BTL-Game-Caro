@@ -57,7 +57,7 @@ DWORD WINAPI display(LPVOID p);
 int main()
 {
 	//thread gui(display);
-	//CreateThread(NULL, 0, display, NULL, 0, NULL);
+	CreateThread(NULL, 0, display, NULL, 0, NULL);
 	//
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -106,9 +106,9 @@ int main()
 				else {
 					buf[ret] = 0;
 					//
-					cout << clients[i].name << "(" << clients[i].state << ")" << " gui:" << buf << endl;
+					//cout << clients[i].name << "(" << clients[i].state << ")" << " gui:" << buf << endl;
 					//-v 127.0.0.1 9000
-					sprintf(logg, "%s gui: %s", clients[i].name, buf);
+					//sprintf(logg, "%s gui: %s", clients[i].name, buf);
 					handle(i, buf);
 				}
 			}
@@ -525,7 +525,5 @@ DWORD WINAPI display(LPVOID p)
 				cout << rooms[i].player[1]->name << '\t';
 			}
 		}
-		gotoXY(0, 10);
-		cout << logg;
 	}
 }

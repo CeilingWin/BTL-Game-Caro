@@ -11,16 +11,21 @@ class Game
 private:
 	Caro *caro;
 	RenderWindow *window;
-	bool turn; //false =oppenent turn 
+
 	SOCKET server;
 	WSADATA wsa;
 	SOCKADDR_IN serverAddr;
 	unsigned long ul = 1;
+
+	bool turn; //false =oppenent turn 
 	PlayerOffline *you;
 	PlayerOnline *oppenent;
+	int yourPoint;
+	int oppenentPoint;
 	Font font,font2;
 	float timePlay, turnTime;
 	int roomId; 
+
 	Sprite background;
 	Texture bgTexture;
 	Color cIde;
