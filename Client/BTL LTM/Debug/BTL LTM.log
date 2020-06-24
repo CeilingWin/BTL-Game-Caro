@@ -1,0 +1,13 @@
+﻿  TextBox.cpp
+c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(43): warning C4018: '>=': signed/unsigned mismatch
+c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(43): warning C4018: '<=': signed/unsigned mismatch
+c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(49): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  Source.cpp
+  Button.cpp
+c:\users\thang\music\btl ltm\btl ltm\button.cpp(15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Box.cpp
+c:\users\thang\music\btl ltm\btl ltm\box.cpp(14): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
+  Generating Code...
+sfml-graphics-d.lib(sfml-graphics-d-2.dll) : fatal error LNK1112: module machine type 'x64' conflicts with target machine type 'X86'
