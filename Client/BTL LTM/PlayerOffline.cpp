@@ -16,32 +16,29 @@ Vector2i PlayerOffline::move()
 				state = 1;
 			}
 		}
-		return Vector2i(-1, 0);
-	} 
-	else if (state == 1) {
-		int ret = recv(server, mess, sizeof(mess), 0);
-		if (ret > 0) {
-			mess[ret] = 0;
-			cout << "server:" << mess << endl;
-			sscanf(mess, "%s %s ", protocol, values);
-			if (strcmp(protocol, "GAME") == 0 && strcmp(values, "OK") == 0) {
-				if (lastMove.x != -1) {
-					Vector2i move = lastMove;
-					lastMove.x = -1;
-					state = 0;
-					return move;
-				}
-			}
-			else if (strcmp(protocol, "GAME") == 0 && strcmp(values, "GOTO") == 0) {
-				int x;
-				sscanf(mess, "%s %s %d", protocol, values, &x);
-				if (x == 404)
-					return Vector2i(-3, 0);
+	}
+	int ret = recv(server, mess, sizeof(mess), 0);
+	if (ret > 0) {
+		mess[ret] = 0;
+		cout << "server:" << mess << endl;
+		sscanf(mess, "%s %s ", protocol, values);
+		if (strcmp(protocol, "GAME") == 0 && strcmp(values, "OK") == 0) {
+			if (lastMove.x != -1) {
+				Vector2i move = lastMove;
+				lastMove.x = -1;
+				state = 0;
+				return move;
 			}
 		}
-		return Vector2i(-1, 0);
+		else if (strcmp(protocol, "GAME") == 0 && strcmp(values, "GOTO") == 0) {
+			int x;
+			cout << "nhan duoc game goto 404 \n";
+			sscanf(mess, "%s %s %d", protocol, values, &x);
+			if (x == 404)
+				return Vector2i(-3, 0);
+		}
 	}
-	return Vector2i();
+	return Vector2i(-1, 0);
 }
 
 
@@ -53,7 +50,7 @@ void PlayerOffline::setWindow(RenderWindow *window)
 
 
 
-PlayerOffline::PlayerOffline(char * name, SOCKET server):Player(name,server)
+PlayerOffline::PlayerOffline(char * name, SOCKET server) :Player(name, server)
 {
 }
 

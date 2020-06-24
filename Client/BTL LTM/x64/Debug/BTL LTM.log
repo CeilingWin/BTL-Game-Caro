@@ -1,35 +1,39 @@
-﻿  TextBox.cpp
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(46): warning C4018: '>=': signed/unsigned mismatch
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(46): warning C4018: '<=': signed/unsigned mismatch
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(47): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(52): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\textbox.cpp(66): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BTL LTM.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  TextBox.cpp
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(46): warning C4018: '>=': signed/unsigned mismatch
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(46): warning C4018: '<=': signed/unsigned mismatch
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(47): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(52): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(66): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Source.cpp
   PlayerOnline.cpp
   PlayerOffline.cpp
-c:\users\thang\music\btl ltm\btl ltm\playeroffline.cpp(15): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\playeroffline.cpp(15): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   Player.cpp
   Game.cpp
-c:\users\thang\music\btl ltm\btl ltm\game.cpp(65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\game.cpp(66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\game.cpp(127): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\game.cpp(224): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\game.cpp(228): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\game.cpp(236): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(125): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(222): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(226): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(233): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(428): warning C4101: 'values': unreferenced local variable
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(428): warning C4101: 'protocol': unreferenced local variable
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(431): warning C4101: 'player': unreferenced local variable
   Caro.cpp
-c:\users\thang\music\btl ltm\btl ltm\caro.cpp(54): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\caro.cpp(55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\caro.cpp(102): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\caro.cpp(103): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\caro.cpp(109): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\caro.cpp(110): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(54): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(101): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(102): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(108): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(109): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Button.cpp
-c:\users\thang\music\btl ltm\btl ltm\button.cpp(15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\button.cpp(15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Box.cpp
-c:\users\thang\music\btl ltm\btl ltm\box.cpp(14): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
-c:\users\thang\music\btl ltm\btl ltm\box.cpp(52): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\box.cpp(14): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\box.cpp(52): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
   Generating Code...
-  BTL LTM.vcxproj -> C:\Users\thang\Music\BTL LTM\x64\Debug\BTL LTM.exe
-  BTL LTM.vcxproj -> C:\Users\thang\Music\BTL LTM\x64\Debug\BTL LTM.pdb (Partial PDB)
+  BTL LTM.vcxproj -> C:\Users\thang\Music\BTL LTM\Client\x64\Debug\Caro Client.exe
+  BTL LTM.vcxproj -> C:\Users\thang\Music\BTL LTM\Client\x64\Debug\Caro Client.pdb (Partial PDB)

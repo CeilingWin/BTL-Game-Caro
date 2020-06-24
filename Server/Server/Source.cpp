@@ -27,6 +27,7 @@ char mess[100];
 int numroom = 0;
 int numclient = 0;
 int roomIdIncree = 100;
+char logg[100];
 void Nocursortype()
 {
 	CONSOLE_CURSOR_INFO Info;
@@ -50,12 +51,13 @@ void protoGame(int clientId, char* buf);
 void protoRoiPhong(int clinetId, char* buf);
 void protoReplay(int clientId, char *buf);
 DWORD WINAPI display(LPVOID p);
+
 //________________MAIN________________
 
 int main()
 {
 	//thread gui(display);
-	CreateThread(NULL, 0, display, NULL, 0, NULL);
+	//CreateThread(NULL, 0, display, NULL, 0, NULL);
 	//
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -104,8 +106,9 @@ int main()
 				else {
 					buf[ret] = 0;
 					//
-					//cout << clients[i].name << "(" << clients[i].state << ")" << " gui:" << buf << endl;
+					cout << clients[i].name << "(" << clients[i].state << ")" << " gui:" << buf << endl;
 					//-v 127.0.0.1 9000
+					sprintf(logg, "%s gui: %s", clients[i].name, buf);
 					handle(i, buf);
 				}
 			}
@@ -189,7 +192,6 @@ void xoaclient(int clientId)
 
 void matketnoi(int clientId)
 {
-	cout << clients[clientId].name << " da bi mat ket noi" << endl;
 	int state = clients[clientId].state;
 	switch (state) {
 	case 0:
@@ -523,5 +525,7 @@ DWORD WINAPI display(LPVOID p)
 				cout << rooms[i].player[1]->name << '\t';
 			}
 		}
+		gotoXY(0, 10);
+		cout << logg;
 	}
 }

@@ -51,23 +51,24 @@ void Game::GD1()
 	int x;
 	Vector2f ipnamePosition, okPosition, ipnameSize, okSize;
 
-	ipnamePosition = { 350,400 };
+	ipnamePosition = { 350,350 };
 	ipnameSize = { 400,50 };
-	okPosition = { 450,500 };
+	okPosition = { 450,450 };
 	okSize = { 200,50 };
 	//intro 
 	Text intro, error;
 	intro.setString(L"GAME CARO");
 	intro.setCharacterSize(100);
 	intro.setFont(font2);
-	intro.setFillColor(Color(54, 54, 54));
+	//intro.setFillColor(Color(54, 54, 54));
+	intro.setFillColor(Color::White);
 	x = (1100 - intro.getGlobalBounds().width) / 2;
-	intro.setPosition(x, 200);
+	intro.setPosition(x, 100);
 	error.setCharacterSize(20);
 	error.setFont(font);
-	error.setFillColor(Color::Red);
+	error.setFillColor(Color::White);
 	error.setString("");
-	error.setPosition(350, 370);
+	error.setPosition(350, 320);
 	//Text box : input name
 	TextBox inputName(ipnamePosition, ipnameSize);
 	inputName.setTypeInput(USERNAME);
@@ -409,7 +410,7 @@ int Game::gameStart()
 	RectangleShape recOut, recIn;
 	recOut.setPosition(pTimeOut);
 	recOut.setSize(sTimeOut);
-	recOut.setFillColor(Color::Black);
+	recOut.setFillColor(Color(0,0,0,0));
 	recOut.setOutlineThickness(5);
 	recOut.setOutlineColor(Color::Cyan);
 
@@ -644,10 +645,8 @@ void Game::gameInit()
 				delete this->oppenent;
 				delete this->caro;
 			}
-			else {
-				delete this->oppenent;
-				break;
-			}
+			else
+				inRoom = false;
 		}
 	}
 	delete this->you;

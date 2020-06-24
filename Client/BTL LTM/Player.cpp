@@ -10,7 +10,6 @@ void Player::lostTurn()
 {
 	this->state = 0;
 	this->lastMove.x = -1;
-	send(server, "GAME GOTO 100 100 .", 20, 0);
 }
 Player::Player(char *name, SOCKET server)
 {
