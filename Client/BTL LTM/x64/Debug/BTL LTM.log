@@ -13,15 +13,16 @@ c:\users\thang\music\btl ltm\client\btl ltm\textbox.cpp(66): warning C4267: 'ini
 c:\users\thang\music\btl ltm\client\btl ltm\playeroffline.cpp(15): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   Player.cpp
   Game.cpp
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(125): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(222): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(226): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(68): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(128): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(229): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(233): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(428): warning C4101: 'values': unreferenced local variable
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(428): warning C4101: 'protocol': unreferenced local variable
-c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(431): warning C4101: 'player': unreferenced local variable
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(240): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(332): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(471): warning C4101: 'values': unreferenced local variable
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(471): warning C4101: 'protocol': unreferenced local variable
+c:\users\thang\music\btl ltm\client\btl ltm\game.cpp(474): warning C4101: 'player': unreferenced local variable
   Caro.cpp
 c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(54): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 c:\users\thang\music\btl ltm\client\btl ltm\caro.cpp(55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
