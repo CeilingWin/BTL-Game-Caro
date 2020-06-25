@@ -10,7 +10,6 @@ void TextBox::setTextPosition()
 	position.x = rec.x + rec.x*0.01;
 	position.y = rec.y + (recs.y - text.getCharacterSize()) / 2 - recs.y*0.1;
 	this->text.setPosition(position);
-	//position=
 }
 
 TextBox::TextBox(Vector2f position, Vector2f size,

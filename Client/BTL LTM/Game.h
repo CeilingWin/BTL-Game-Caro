@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include"PlayerOffline.h"
 #include"PlayerOnline.h"
 #include"Button.h"
@@ -17,7 +17,7 @@ private:
 	SOCKADDR_IN serverAddr;
 	unsigned long ul = 1;
 
-	bool turn; //false =oppenent turn 
+	bool turn; //false =oppenent turn
 	PlayerOffline *you;
 	PlayerOnline *oppenent;
 	int yourPoint;
@@ -31,15 +31,14 @@ private:
 	Color cIde;
 	Color cHover;
 	Color cActive;
-	int getRoomId(char *mess);
+	int getRoomId(char *mess); 
+	void GD1(); //giao diện đăng nhập 
+	void GD2(); //giao diện chọn chế độ 
+	bool GD3(); //giao diện chờ 
+	int gameStart(); //bắt đầu game 
 public:
 	Game();
-	void GD1();
-	void GD2();
-	bool GD3();
-	int gameStart();
 	void gameInit();
-	void test();
 	~Game();
 };
 

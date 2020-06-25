@@ -2,7 +2,6 @@
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 int main() {
 	Game game;
-	//game.test();
 	game.gameInit();
 	return 0;
 }

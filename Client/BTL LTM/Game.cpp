@@ -25,53 +25,55 @@ Game::Game()
 	settings.antialiasingLevel = 6;
 	this->window = new RenderWindow(VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "CARO", Style::Close, settings);
 	this->window->setFramerateLimit(60);
+
 	//init socket server
 	WSAStartup(MAKEWORD(2, 2), &wsa);
 	server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	serverAddr.sin_addr.s_addr = inet_addr(serverIp);
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(serverPort);
-	//ioctlsocket(server, FIONBIO, &ul);
+
 	//font and color
 	this->font.loadFromFile("ceiwin/arial.ttf");
 	this->font2.loadFromFile("ceiwin/font2.otf");
 	cIde = Color(0, 158, 216);
 	cHover = Color(0, 121, 65);
 	cActive = Color::Green;
-	//init board
-	this->turnTime = 20;
-	//init background
-	/*this->bgTexture.loadFromFile("ceiwin/bg.jpg");
-	this->background.setTexture(bgTexture);*/
+
+	//thời gian cho mỗi lượt đánh 
+	this->turnTime = 20; 
 }
 
 void Game::GD1()
 {
-	//background
+	//background 
 	this->bgTexture.loadFromFile("ceiwin/bg13.jpg");
 	this->background.setTexture(bgTexture);
+
 	//
 	int x;
 	Vector2f ipnamePosition, okPosition, ipnameSize, okSize;
-
 	ipnamePosition = { 350,350 };
 	ipnameSize = { 400,50 };
 	okPosition = { 450,450 };
 	okSize = { 200,50 };
+
 	//intro 
 	Text intro, error;
 	intro.setString(L"GAME CARO");
 	intro.setCharacterSize(100);
 	intro.setFont(font2);
 	intro.setFillColor(Color(54, 54, 54));
-	//intro.setFillColor(Color::White);
 	x = (1100 - intro.getGlobalBounds().width) / 2;
 	intro.setPosition(x, 100);
+
+	//error 
 	error.setCharacterSize(20);
 	error.setFont(font);
 	error.setFillColor(Color::White);
 	error.setString("");
 	error.setPosition(350, 320);
+
 	//Text box : input name
 	TextBox inputName(ipnamePosition, ipnameSize);
 	inputName.setTypeInput(USERNAME);
@@ -83,8 +85,6 @@ void Game::GD1()
 	okButton.setStringUnicode(L"Đăng nhập");
 	okButton.setText(&font, Color::White);
 	okButton.reSizeText(30);
-	//Error label
-	//Button error()
 
 	//LOOP nhap ten
 	char nameInput[30];
@@ -138,17 +138,20 @@ void Game::GD1()
 		okButton.draw(*window);
 		window->display();
 	}
-	//init player
+
+	//sau khi nhập tên thành công -> khỏi tạo player 
 	this->you = new PlayerOffline(nameInput, this->server);
 	this->you->setWindow(window);
 }
 
 void Game::GD2()
 {
+	if (!window->isOpen()) return;
+
 	//background
 	this->bgTexture.loadFromFile("ceiwin/bg17.jpg");
 	this->background.setTexture(bgTexture);
-	if (!window->isOpen()) return;
+
 	// init
 	Vector2f pPN, pCR, pFR, sPN, sCR, sFR, pIP, sIP;
 	pIP = { 554,500 };
@@ -165,7 +168,6 @@ void Game::GD2()
 	Text intro, error;
 	intro.setFont(font2);
 	intro.setCharacterSize(100);
-	//intro.setFillColor(Color(54, 54, 54));
 	intro.setFillColor(Color::White);
 	intro.setString(L"Chọn chế độ");
 	intro.setLetterSpacing(2);
@@ -183,7 +185,7 @@ void Game::GD2()
 	inputRoomId.setNoneS(L"Mã phòng");
 	inputRoomId.reSizeText(25);
 
-	// 3 button 
+	// 3 button : tìm phòng, chơi luôn, tạo phòng 
 	Button PN(pPN, sPN, Color(0, 158, 216), Color(15, 121, 160), Color(7, 55, 72));
 	Button CR(pCR, sCR, Color(244, 70, 59), Color(172, 51, 43), Color(109, 27, 22));
 	Button FR(pFR, sFR, Color(57, 230, 63), Color(31, 139, 34), Color(17, 76, 18));
@@ -223,6 +225,7 @@ void Game::GD2()
 		FR.update(m);
 		CR.update(m);
 		inputRoomId.update(m);
+
 		//xu ly button
 		if (PN.isPress()) {
 			strcpy(mess, "CHOILUON .");
@@ -243,6 +246,7 @@ void Game::GD2()
 				error.setString(L"Chưa nhập mã phòng");
 			}
 		}
+
 		// nhan du lieu tu server
 		int ret = recv(server, mess, sizeof(mess), 0);
 		if (ret > 0) {
@@ -259,6 +263,7 @@ void Game::GD2()
 			else if (room == -2)
 				error.setString(L"Phòng đã đủ 2 người chơi");
 		}
+
 		//display
 		window->clear();
 		window->draw(background);
@@ -275,11 +280,13 @@ void Game::GD2()
 
 bool Game::GD3()
 {
+	if (window->isOpen() == false) return false;
+
 	//background
 	this->bgTexture.loadFromFile("ceiwin/bg11.jpg");
 	this->background.setTexture(bgTexture);
-	if (window->isOpen() == false) return false;
-	//Waitting
+
+	//Waitting 
 	Sprite wait;
 	Texture waittexture;
 	waittexture.loadFromFile("ceiwin/wait1.png");
@@ -310,6 +317,7 @@ bool Game::GD3()
 	intro.setFillColor(Color(54, 54, 54));
 	intro.setString(L"Chờ người chơi khác...");
 	intro.setPosition(230, 170);
+
 	//LOOP
 	char mess[100];
 	char protocol[30];
@@ -330,11 +338,13 @@ bool Game::GD3()
 		}
 		Exit.update(m);
 		wait.rotate(0.99);
-		//waiting server 
+		//
 		if (Exit.isPress()) {
 			send(server, "ROIPHONG .", 11, 0);
 			return false;
 		}
+
+		//chờ lệnh game start từ server 
 		int ret = recv(server, mess, sizeof(mess), 0);
 		if (ret > 0) {
 			mess[ret] = 0;
@@ -351,6 +361,7 @@ bool Game::GD3()
 				return true;
 			}
 		}
+
 		//display
 		window->clear();
 		window->draw(background);
@@ -367,20 +378,13 @@ bool Game::GD3()
 
 int Game::gameStart()
 {
+	if (window->isOpen() == false) return -1;
+
 	//background
 	this->bgTexture.loadFromFile("ceiwin/bg.jpg");
 	this->background.setTexture(bgTexture);
-	////test
-	/*caro = new Caro(window, { 20,20 });
-	you = new PlayerOffline("thang", server);
-	you->setBoard(caro->getBoard());
-	you->setWindow(window);
-	oppenent = new PlayerOnline("ngoc", server);
-	yourPoint = 2;
-	oppenentPoint = 1;*/
+
 	//init 
-	if (window->isOpen() == false) return -1;
-	//
 	Vector2f pY, pO, pTY, pTO, pTime, pTimeOut, pOut;
 	Vector2f sY, sO, sTY, sTO, sTime, sTimeOut, sOut;
 	pY = { 805,40 };
@@ -393,10 +397,12 @@ int Game::gameStart()
 	sTimeOut = { 260,40 };
 	pOut = { 820,560 };
 	sOut = { 260,50 };
+
 	//Button exit
 	Button bOut(pOut, sOut, Color(244, 70, 59), Color(172, 51, 43), Color(109, 27, 22));
 	bOut.setText(&font, Color::White);
 	bOut.setStringUnicode(L"OUT GAME");
+
 	//label 2 player 
 	Button bP1(pY, sY, Color(30, 234, 85,200), cHover, cActive);
 	Button bP2(pO, sO, Color(248, 14, 14,200), cHover, cActive);
@@ -406,6 +412,7 @@ int Game::gameStart()
 	bP2.setText(&font, Color::Black);
 	bP2.setString(oppenent->getName());
 	bP2.reSizeText(30);
+
 	//text
 	Text vs;
 	vs.setCharacterSize(25);
@@ -430,7 +437,8 @@ int Game::gameStart()
 		x.setPosition(pTO);
 		o.setPosition(pTY);
 	}
-	//point 
+
+	//điểm số 
 	Vector2f dir;
 	dir = { 35,0 };
 	pTY += dir;
@@ -443,7 +451,6 @@ int Game::gameStart()
 	sprintf(point, "%d", yourPoint);
 	yp.setString(point);
 	yp.setBold();
-
 	op.setText(&font, Color::Red);
 	sprintf(point, "%d", oppenentPoint);
 	op.setString(point);
@@ -471,7 +478,6 @@ int Game::gameStart()
 	char buff[100],protocol[10],values[10];
 	Clock clock;
 	bool playing = true;
-	Player *player;
 	while (playing && window->isOpen()) {
 		Event e;
 		timeElapse = clock.restart().asSeconds();
@@ -495,7 +501,7 @@ int Game::gameStart()
 			send(server, "GAME GOTO 404 0 .", 18, 0);
 			return -1;
 		}
-		//xu ly time label
+		//xu ly thanh thời gian 
 		time -= timeElapse;
 		if (time <= 0)    time = 0;
 		recIn.setSize({ sizeRecInx*(time / turnTime), sizeRecIny });
@@ -600,6 +606,7 @@ int Game::gameStart()
 		result.setString("YOU LOSE");
 		result.setFillColor(Color::Red);
 	}
+
 	result.setPosition((1100 - result.getGlobalBounds().width) / 2, 250);
 	pO = { 350,450 };
 	sO = { 400,50 };
@@ -615,6 +622,8 @@ int Game::gameStart()
 	exit.setStringUnicode(L"Chạy");
 	exit.reSizeText(25);
 	exit.setBold();
+
+	//LOOP chờ replay 
 	while (window->isOpen()) {
 		Event e;
 		Vector2f m = { (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y };
@@ -667,8 +676,6 @@ int Game::gameStart()
 
 void Game::gameInit()
 {
-	//this->gameStart();
-	//this->GD2();
 	this->GD1();
 	while (window->isOpen()) {
 		this->GD2();
@@ -700,41 +707,6 @@ void Game::gameInit()
 	delete this->you;
 }
 
-void Game::test()
-{
-
-	RectangleShape rec;
-	rec.setPosition(20, 20);
-	rec.setSize({ 780, 600 });
-	rec.setFillColor(Color::Red);
-	Caro caro(window, { 20,20 });
-	//this->gameStart();
-	/*this->GD1();
-	this->GD2();
-	this->GD3();*/
-	//this->GD1();
-	this->GD3();
-	this->GD2();
-	while (window->isOpen()) {
-		Event e;
-		while (window->pollEvent(e)) {
-			switch (e.type) {
-			case Event::Closed:
-				window->close();
-			case Event::MouseMoved:
-				caro.mark({ (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y });
-				break;
-			case Event::MouseButtonPressed:
-				caro.update(Caro::getIndex({ (float)Mouse::getPosition(*window).x, (float)Mouse::getPosition(*window).y }, { 20,20 }));
-			}
-		}
-		window->clear();
-		window->draw(background);
-		caro.draw();
-		//window->draw(rec);
-		window->display();
-	}
-}
 
 
 Game::~Game()

@@ -71,7 +71,6 @@ char * Box::getString()
 void Box::update(Vector2f posMouse)
 {
 	this->state = IDE;
-	//this->press = false;
 	if (this->rectang.getGlobalBounds().contains(posMouse)) {
 		this->state = HOVER;
 	}
