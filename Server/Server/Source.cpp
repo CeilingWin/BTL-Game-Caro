@@ -105,10 +105,6 @@ int main()
 				}
 				else {
 					buf[ret] = 0;
-					//
-					//cout << clients[i].name << "(" << clients[i].state << ")" << " gui:" << buf << endl;
-					//-v 127.0.0.1 9000
-					//sprintf(logg, "%s gui: %s", clients[i].name, buf);
 					handle(i, buf);
 				}
 			}
@@ -440,7 +436,6 @@ void protoRoiPhong(int clientId, char* buf)
 {
 	if (clients[clientId].state == 2) {
 		roiphong(clientId);
-		//cout << clients[clientId].name << "da roi phong " << endl;
 	}
 }
 
