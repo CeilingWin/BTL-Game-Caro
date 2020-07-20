@@ -1,0 +1,20 @@
+﻿  console.cpp
+  Source.cpp
+Source.cpp(310): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(313): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(328): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(348): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(353): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(363): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(369): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(408): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(410): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(418): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(430): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(459): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(461): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Source.cpp(470): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Generating code
+  All 43 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Server.vcxproj -> C:\Users\thang\Music\BTL LTM\Server\x64\Release\Server.exe
