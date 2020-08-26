@@ -14,8 +14,10 @@ int Game::getRoomId(char * mess)
 		else if (strcmp(value, "ERROR") == 0)
 			if (roomId == 1) return -1; //ko tim thay phong
 			else if (roomId == 2) return -2;// phong da du 2 nguoi
+			else if (roomId == 3) return -3; // can nhap mat khau de vao phong
+			else if (roomId == 4) return -4;
 	}
-	return -3;
+	return -5;
 }
 
 Game::Game()
@@ -153,15 +155,19 @@ void Game::GD2()
 	this->background.setTexture(bgTexture);
 
 	// init
-	Vector2f pPN, pCR, pFR, sPN, sCR, sFR, pIP, sIP;
+	Vector2f pPN, pCR, pFR, sPN, sCR, sFR, pIP, sIP, pPW, sPW, pPJR, pHidden;
 	pIP = { 554,500 };
 	pPN = { 347,300 };
 	pCR = { 347,400 };
+	pPW = { 554,400 };
 	pFR = { 347,500 };
+	pPJR= { 554,560 };
+	pHidden = { 0,1000 };
 	sPN = { 405,50 };
-	sCR = sPN;
 	sFR = { 200,50 };
 	sIP = { 200,50 };
+	sCR = sFR;
+	sPW = sCR;
 	char mess[100];
 
 	//intro and error
@@ -184,6 +190,18 @@ void Game::GD2()
 	inputRoomId.setTypeInput(NUMBER);
 	inputRoomId.setNoneS(L"Mã phòng");
 	inputRoomId.reSizeText(25);
+	//textbox :input password room
+	TextBox inputPassword(pPW, sPW);
+	inputPassword.setText(&font, Color(105, 105, 105));
+	inputPassword.setTypeInput(USERNAME);
+	inputPassword.setNoneS(L"Mật khẩu");
+	inputPassword.reSizeText(25);
+	//textbox : input password to join room
+	TextBox inputPassToJoinRoom(pHidden, sIP);
+	inputPassToJoinRoom.setText(&font, Color(105, 105, 105));
+	inputPassToJoinRoom.setTypeInput(USERNAME);
+	inputPassToJoinRoom.setNoneS(L"Mật khẩu");
+	inputPassToJoinRoom.reSizeText(25);
 
 	// 3 button : tìm phòng, chơi luôn, tạo phòng 
 	Button PN(pPN, sPN, Color(0, 158, 216), Color(15, 121, 160), Color(7, 55, 72));
@@ -201,7 +219,7 @@ void Game::GD2()
 
 	//LOOP 
 	bool notGetRoomId = true;
-	char roomId[20];
+	char s[20], pass[20];
 	int room;
 	while (notGetRoomId && window->isOpen()) {
 		Event e;
@@ -213,6 +231,8 @@ void Game::GD2()
 				return;
 			case Event::TextEntered:
 				inputRoomId.handleKey(e.text.unicode);
+				inputPassword.handleKey(e.text.unicode);
+				inputPassToJoinRoom.handleKey(e.text.unicode);
 				break;
 			case Event::MouseButtonPressed:
 				PN.setPress(m);
@@ -225,21 +245,29 @@ void Game::GD2()
 		FR.update(m);
 		CR.update(m);
 		inputRoomId.update(m);
-
+		inputPassword.update(m);
+		inputPassToJoinRoom.update(m);
 		//xu ly button
 		if (PN.isPress()) {
 			strcpy(mess, "CHOILUON .");
 			send(server, mess, strlen(mess), 0);
 		}
 		else if (CR.isPress()) {
-			strcpy(mess, "TAOPHONG .");
+			strcpy(s, inputPassword.getString());
+			if (strlen(s) == 0)
+				strcpy(mess, "TAOPHONG [NULL] .");
+			else 
+				sprintf(mess, "TAOPHONG %s .", s);
 			send(server, mess, strlen(mess), 0);
 		}
 		else if (FR.isPress()) {
-			strcpy(roomId, inputRoomId.getString());
-			if (strlen(roomId) > 0) {
-				int id = atoi(roomId);
-				sprintf(mess, "TIMPHONG %d .", id);
+			strcpy(s, inputRoomId.getString());
+			strcpy(pass, inputPassToJoinRoom.getString());
+			if (strlen(pass) == 0)
+				strcpy(pass, "[NULL]");
+			if (strlen(s) > 0) {
+				int id = atoi(s);
+				sprintf(mess, "TIMPHONG %d %s .", id,pass);
 				send(server, mess, strlen(mess), 0);
 			}
 			else {
@@ -262,6 +290,12 @@ void Game::GD2()
 				error.setString(L"Không tìm thấy phòng");
 			else if (room == -2)
 				error.setString(L"Phòng đã đủ 2 người chơi");
+			else if (room == -3) {
+				error.setString(L"Cần nhập mật khẩu để vào phòng");
+				inputPassToJoinRoom.setPosition(pPJR);
+			}
+			else if (room == -4)
+				error.setString(L"Mật khẩu sai");
 		}
 
 		//display
@@ -273,6 +307,8 @@ void Game::GD2()
 		CR.draw(*window);
 		window->draw(error);
 		inputRoomId.draw(*window);
+		inputPassword.draw(*window);
+		inputPassToJoinRoom.draw(*window);
 		window->display();
 	}
 
@@ -676,6 +712,7 @@ int Game::gameStart()
 
 void Game::gameInit()
 {
+	//this->GD2();
 	this->GD1();
 	while (window->isOpen()) {
 		this->GD2();

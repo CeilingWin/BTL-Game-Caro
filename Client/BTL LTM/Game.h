@@ -4,7 +4,7 @@
 #include"Button.h"
 #include"TextBox.h"
 #include"Caro.h"
-const char serverIp[20] = "52.147.199.60";
+const char serverIp[20] = "127.0.0.1";
 const short serverPort = 9000;
 class Game
 {

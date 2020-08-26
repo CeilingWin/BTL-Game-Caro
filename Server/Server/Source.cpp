@@ -16,6 +16,7 @@ struct Client {
 struct Room {
 	int roomid;
 	int numclientofroom = 0;
+	char password[20];
 	Client *player[2];
 	bool p1Replay = false;
 	bool p2Replay = false;
@@ -39,8 +40,8 @@ void handle(int clientId, char* buf);
 void xoaphong(int roomId);
 void xoaclient(int clientId);
 void matketnoi(int clientId);
-int timphong(int roomId);//if roomId=-1 la tim phong hop le, roomId>=0 la tim phong co Id=roomId
-int taophong(int clientId);
+int timphong(int roomId,char *password);//if roomId=-1 la tim phong hop le, roomId>=0 la tim phong co Id=roomId,roomId=-3 la password sai
+int taophong(int clientId,char *password);
 void roiphong(int clientId);
 void vaophong(int clinetId, int roomId);
 void startgame(int roomId);
@@ -153,6 +154,7 @@ void xoaphong(int id)
 	rooms[id].roomid = rooms[idf].roomid;
 	rooms[id].player[0] = rooms[idf].player[0];
 	rooms[id].player[1] = rooms[idf].player[1];
+	strcpy(rooms[id].password, rooms[idf].password);
 	rooms[id].numclientofroom = rooms[idf].numclientofroom;
 	numroom--;
 }
@@ -226,14 +228,14 @@ void matketnoi(int clientId)
 	xoaclient(clientId);
 }
 
-int timphong(int roomId)
+int timphong(int roomId,char *password)
 {
 	//tra ve roomId
 	//tra ve -1 : ko tim thay phong
 	//tra ve -2 : phong da du 2 nguoi choi
 	if (roomId == -1) {
 		for (int i = 0; i < numroom; i++) {
-			if (rooms[i].numclientofroom == 1)
+			if (rooms[i].numclientofroom == 1 && strcmp(password,rooms[i].password)==0)
 				return rooms[i].roomid;
 		}
 		return -1;
@@ -241,7 +243,9 @@ int timphong(int roomId)
 	else {
 		for (int i = 0; i < numroom; i++) {
 			if (rooms[i].roomid == roomId)
-				if (rooms[i].numclientofroom == 2)
+				if (strcmp(rooms[i].password, password) != 0)
+					return -3;
+				else if (rooms[i].numclientofroom == 2)
 					return -2;
 				else
 					return rooms[i].roomid;
@@ -250,11 +254,12 @@ int timphong(int roomId)
 	}
 }
 
-int taophong(int clientId)
+int taophong(int clientId,char *password)
 {
 	rooms[numroom].numclientofroom = 1;
 	rooms[numroom].player[0] = &clients[clientId];
 	rooms[numroom].roomid = roomIdIncree;
+	strcpy(rooms[numroom].password, password);
 	clients[clientId].roomid = roomIdIncree;
 	roomIdIncree++;
 	numroom++;
@@ -322,8 +327,10 @@ void startgame(int roomId)
 
 void protoTaoPhong(int clientId, char* buf)
 {
+	char password[20];
 	if (clients[clientId].state == 1) {
-		int roomId = taophong(clientId);
+		sscanf(buf, "%s", password);
+		int roomId = taophong(clientId,password);
 		sprintf(mess, "MAPHONG OK %d .", roomId);
 		send(clients[clientId].socket, mess, strlen(mess), 0);
 		clients[clientId].state = 2;
@@ -332,16 +339,23 @@ void protoTaoPhong(int clientId, char* buf)
 
 void protoTimPhong(int clientId, char* buf)
 {
+	char password[20];
 	if (clients[clientId].state == 1) {
 		int roomId;
-		sscanf(buf, "%d", &roomId);
-		roomId = timphong(roomId);
+		sscanf(buf, "%d %s", &roomId,password);
+		roomId = timphong(roomId,password);
 		strcpy(mess, "MAPHONG ");
 		if (roomId == -1) {
 			strcat(mess, " ERROR 1 .");
 		}
 		else if (roomId == -2) {
 			strcat(mess, " ERROR 2 .");
+		}
+		else if (roomId == -3) {
+			if (strcmp(password, "[NULL]") == 0)
+				strcat(mess, " ERROR 3 .");
+			else
+				strcat(mess, " ERROR 4 .");
 		}
 		else {
 			sprintf(mess, "MAPHONG OK %d .", roomId);
@@ -357,14 +371,14 @@ void protoTimPhong(int clientId, char* buf)
 void protoChoiLuon(int clientId, char* buf)
 {
 	if (clients[clientId].state == 1) {
-		int roomId = timphong(-1);
+		int roomId = timphong(-1,"[NULL]");
 		if (roomId >= 0) {
 			sprintf(mess, "MAPHONG OK %d .", roomId);
 			send(clients[clientId].socket, mess, strlen(mess), 0);
 			vaophong(clientId, roomId);
 		}
 		else {
-			roomId = taophong(clientId);
+			roomId = taophong(clientId,"[NULL]");
 			sprintf(mess, "MAPHONG OK %d .", roomId);
 			send(clients[clientId].socket, mess, strlen(mess), 0);
 			clients[clientId].state = 2;
@@ -481,7 +495,7 @@ DWORD WINAPI display(LPVOID p)
 		gotoXY(0, 2);
 		TextColor(ColorCode_Red);
 		for (int i = 2; i < 25; i++)
-			cout << "                                                  |                                                 \n";
+			cout << "                                                  |                                                             \n";
 
 		gotoXY(20, 0);
 		TextColor(ColorCode_Blue);
@@ -494,7 +508,7 @@ DWORD WINAPI display(LPVOID p)
 		cout << "Name        RoomId      State       Socket";
 		gotoXY(51, 1);
 		TextColor(ColorCode_Green);
-		cout << "RoomId      NumPlayer   Player1     Player2";
+		cout << "RoomId      NumPlayer   Player1     Player2     Pass";
 		TextColor(ColorCode_Yellow);
 		for (int i = 0; i < numclient; i++) {
 			gotoXY(0, i + 2);
@@ -519,6 +533,8 @@ DWORD WINAPI display(LPVOID p)
 				gotoXY(87, i + 2);
 				cout << rooms[i].player[1]->name << '\t';
 			}
+			gotoXY(99, i + 2);
+			cout << rooms[i].password;
 		}
 	}
 }

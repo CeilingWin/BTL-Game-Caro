@@ -23,6 +23,7 @@ public:
 	Box(Vector2f position, Vector2f size, Color ide, Color hover, Color active);
 	Vector2f getSize();
 	Vector2f getPosition();
+	void setPosition(Vector2f position);
 	void setString(char *k);
 	void setText(Font *font, Color color);
 	void setTexture(Texture &texture);

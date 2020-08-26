@@ -27,6 +27,12 @@ Vector2f Box::getPosition()
 	this->setTextPosition();
 }
 
+void Box::setPosition(Vector2f position)
+{
+	this->rectang.setPosition(position);
+	this->setTextPosition();
+}
+
 void Box::setString(char *k)
 {
 	strcpy(s, k);
