@@ -1,1 +1,19 @@
-﻿
+﻿  Source.cpp
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(315): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(318): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(335): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(362): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(367): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(377): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(383): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(422): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(424): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(432): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(444): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(473): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(475): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\server\server\source.cpp(484): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  console.cpp
+  Generating Code...
+  Server.vcxproj -> C:\Users\thang\Music\BTL-Game-Caro\Server\x64\Debug\Server.exe
+  Server.vcxproj -> C:\Users\thang\Music\BTL-Game-Caro\Server\x64\Debug\Server.pdb (Partial PDB)

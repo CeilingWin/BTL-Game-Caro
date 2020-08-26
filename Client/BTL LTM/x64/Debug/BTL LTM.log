@@ -1,0 +1,12 @@
+﻿  Game.cpp
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(69): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(70): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(130): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(253): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(261): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(271): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(376): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(520): warning C4101: 'values': unreferenced local variable
+c:\users\thang\music\btl-game-caro\client\btl ltm\game.cpp(520): warning C4101: 'protocol': unreferenced local variable
+  BTL LTM.vcxproj -> C:\Users\thang\Music\BTL-Game-Caro\Client\x64\Debug\Caro Client.exe
+  BTL LTM.vcxproj -> C:\Users\thang\Music\BTL-Game-Caro\Client\x64\Debug\Caro Client.pdb (Partial PDB)

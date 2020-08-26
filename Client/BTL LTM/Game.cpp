@@ -413,7 +413,13 @@ bool Game::GD3()
 }
 
 int Game::gameStart()
-{
+{	//debug
+	/*this->you = new PlayerOffline("thang", this->server);
+	this->oppenent =new PlayerOnline("test", this->server);
+	this->caro = new Caro(window, { 20,20 });
+	this->you->setBoard(caro->getBoard());
+	this->you->setWindow(window);*/
+
 	if (window->isOpen() == false) return -1;
 
 	//background
@@ -631,6 +637,7 @@ int Game::gameStart()
 	result.setCharacterSize(100);
 	result.setFont(font2);
 	result.setStyle(Text::Bold);
+
 	if (turn) {
 		yourPoint++;
 		result.setString("YOU WIN");
@@ -642,11 +649,16 @@ int Game::gameStart()
 		result.setString("YOU LOSE");
 		result.setFillColor(Color::Red);
 	}
+	//update point
+	sprintf(point, "%d", yourPoint);
+	yp.setString(point);
+	sprintf(point, "%d", oppenentPoint);
+	op.setString(point);
 
-	result.setPosition((1100 - result.getGlobalBounds().width) / 2, 250);
-	pO = { 350,450 };
-	sO = { 400,50 };
-	pY = { 350,510 };
+	result.setPosition((820 - result.getGlobalBounds().width) / 2, 250);
+	pO = { 850,450 };
+	sO = { 200,50 };
+	pY = { 850,510 };
 	sY = sO;
 	Button replay(pO, sO, Color(57, 230, 63), Color(31, 139, 34), Color(17, 76, 18));
 	Button exit(pY, sY, Color(244, 70, 59), Color(172, 51, 43), Color(109, 27, 22));
@@ -702,6 +714,11 @@ int Game::gameStart()
 		//display
 		window->clear();
 		window->draw(background);
+		this->caro->draw(); 
+		bP1.draw(*window);
+		bP2.draw(*window);
+		yp.draw(*window);
+		op.draw(*window);
 		window->draw(result);
 		replay.draw(*window);
 		exit.draw(*window);
@@ -712,6 +729,7 @@ int Game::gameStart()
 
 void Game::gameInit()
 {
+	//this->gameStart();
 	//this->GD2();
 	this->GD1();
 	while (window->isOpen()) {
